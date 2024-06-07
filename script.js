@@ -90,12 +90,15 @@ const gameState = (function() {
         ];
 
         for(let pattern of winningPatterns) {
+
             for(let j = 0; pattern.length; j++) {
                 if(board[pattern[j]] !== currentPlayer.marker) {
                     break;
                 }
 
-                return j === pattern.length - 1; // if j reaches the last index -> indicates a win
+                if(j === pattern.length - 1) {
+                    return true;
+                }
             };
         };
 
