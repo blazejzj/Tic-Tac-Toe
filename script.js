@@ -1,27 +1,24 @@
 
-
 const gameBoard = (function() {
 
-
-
-    var gameContainer = document.querySelector(".board");
+    let gameContainer = document.querySelector(".board");
     // Initialize the state array
-    var board = Array(9).fill("");
+    let board = Array(9).fill("");
 
     const createBoard = () => {
         for(let i = 0; i < 9; i++) {
-            square = createBoardSquare(i);
+            let square = createBoardSquare(i);
             gameContainer.appendChild(square);
-        }
-    }
+        };
+    };
 
     const createBoardSquare = (index) => {
-        var singleSquare = document.createElement("div");
-        singleSquare.classList.add("squares", "square" + index);
+        let singleSquare = document.createElement("div");
+        singleSquare.classList.add("square", "square" + index);
         singleSquare.addEventListener("click", function() {
-            handlePlayerMove(index)
+            gameState.handlePlayerMove(index)
         });
-        return singleSquare
+        return singleSquare;
     }
 
     const markSquare = (index, playerMarker) => {
@@ -29,18 +26,21 @@ const gameBoard = (function() {
         // Mark index with playerMarker
         board[index] = playerMarker;
         square.textContent = board[index];
-    }
+    };
     
     const resetBoard = () => {
         board.fill("");
-    }
+        // reset each square
+        document.querySelectorAll(".square").forEach(square => square.textContent = "");
+    };
 
     const getBoard = () => {
         return board;
-    }
+    };
+    
 
     return { createBoard, markSquare, resetBoard, getBoard }
-})
+})();
 
 function createPlayer(name, marker) {
     return {name, marker};
@@ -51,9 +51,11 @@ const gameState = (function() {
     // Initialize players -> Gather names later
     const player1 = createPlayer("placeholder1", "o");
     const player2 = createPlayer("placeholder2", "x");
+    let board = gameBoard.getBoard(); // get the board
 
     // Initialize boardgameContainer
     const handlePlayerMove = (index) => {
+
 
         // Check first if square is empty
         if(board[index] === "") {
@@ -62,9 +64,11 @@ const gameState = (function() {
             if(!checkForWin()) {
                 switchTurn();
             }
-            // else {
-            //     gameBoard.resetBoard();
-            // }
+
+            else {
+                alert(currentPlayer.name + " wins!")
+                gameBoard.resetBoard();
+            }
         }
     };
 
@@ -90,7 +94,6 @@ const gameState = (function() {
         ];
 
         for(let pattern of winningPatterns) {
-
             for(let j = 0; pattern.length; j++) {
                 if(board[pattern[j]] !== currentPlayer.marker) {
                     break;
@@ -108,8 +111,7 @@ const gameState = (function() {
 
     return { handlePlayerMove };
 
-});
+})();
 
 
-gameBoard.createBoard();
-gameState();
+gameBoard.createBoard(); 
