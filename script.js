@@ -2,10 +2,11 @@
 
 const gameBoard = (function() {
 
-    // Initialize the state array
-    var board = Array(9).fill("");
+
 
     var gameContainer = document.querySelector(".board");
+    // Initialize the state array
+    var board = Array(9).fill("");
 
     const createBoard = () => {
         for(let i = 0; i < 9; i++) {
@@ -51,12 +52,7 @@ const gameState = (function() {
     const player1 = createPlayer("placeholder1", "o");
     const player2 = createPlayer("placeholder2", "x");
 
-    // Initialize board
-    const board = gameBoard.getBoard();
-
-    // First players turn
-    let currentPlayer = player1;
-
+    // Initialize boardgameContainer
     const handlePlayerMove = (index) => {
 
         // Check first if square is empty
@@ -112,5 +108,5 @@ const gameState = (function() {
 });
 
 
-gameBoard();
+gameBoard.createBoard();
 gameState();
