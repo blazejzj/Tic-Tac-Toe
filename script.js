@@ -1,116 +1,121 @@
-
 const gameBoard = (function() {
-
     let gameContainer = document.querySelector(".board");
-    // Initialize the state array
-    let board = Array(9).fill("");
+    let board = Array(9).fill(""); // fill board with empty strings for now
 
     const createBoard = () => {
-        for(let i = 0; i < 9; i++) {
-            let square = createBoardSquare(i);
-            gameContainer.appendChild(square);
-        };
+        gameContainer.innerHTML = '';  // Clear existing squares if any
+        for (let i = 0; i < 9; i++) {
+            gameContainer.appendChild(createBoardSquare(i));
+        }
     };
 
     const createBoardSquare = (index) => {
-        let singleSquare = document.createElement("div");
-        singleSquare.classList.add("square", "square" + index);
-        singleSquare.addEventListener("click", function() {
-            gameState.handlePlayerMove(index)
+        let square = document.createElement("div");
+        square.classList.add("square", "square" + index);
+        square.addEventListener("click", () => {
+            gameState.handlePlayerMove(index);
         });
-        return singleSquare;
-    }
+        return square;
+    };
 
     const markSquare = (index, playerMarker) => {
         const square = document.querySelector(".square" + index);
-        // Mark index with playerMarker
         board[index] = playerMarker;
-        square.textContent = board[index];
+        square.textContent = playerMarker;
     };
-    
+
     const resetBoard = () => {
         board.fill("");
-        // reset each square
         document.querySelectorAll(".square").forEach(square => square.textContent = "");
     };
 
-    const getBoard = () => {
-        return board;
-    };
-    
+    const getBoard = () => board;
 
-    return { createBoard, markSquare, resetBoard, getBoard }
+    return { createBoard, markSquare, resetBoard, getBoard };
+
 })();
 
 function createPlayer(name, marker) {
-    return {name, marker};
+    return {name, marker, score: 0};
 };
 
 const gameState = (function() {
 
     const playerNameForms = document.getElementById("playerNameForm");
-    const informationDisplay = document.getElementById("infoDisplay")
-    const board = gameBoard.getBoard(); // get the board
-    let gameActive = false;
-    let player1, player2, currentPlayer;
+    const informationDisplay = document.getElementById("infoDisplay");
+    const scoreDisplay = document.getElementById("score");
+    const board = gameBoard.getBoard();
 
+    let player1, player2, currentPlayer, rounds;
+    let roundsPlayed = 0;
+    let gameActive = false;
 
     playerNameForms.addEventListener("submit", function (e) {
         e.preventDefault();
+        resetGame(); // At every submit we reset the game -> incase of name change in the middle of the game
 
-        // gather names
+        // get player names
         const player1NameValue = document.getElementById("firstName").value;
         const player2NameValue = document.getElementById("secondName").value;
 
-        // assign player names
+        // get desired amount of rounds
+        rounds = parseInt(document.getElementById("rounds").value);
+
+        // create players
         player1 = player1NameValue ? createPlayer(player1NameValue, "O") : createPlayer("Player 1", "O");
         player2 = player2NameValue ? createPlayer(player2NameValue, "X") : createPlayer("Player 2", "X");
-
-        // assign current player (always first player going to be playing "O")
         currentPlayer = player1;
 
-        // clear the forms
+        // reset forms, start game, update display with names
         playerNameForms.reset();
-
-        // Start the game
         gameBoard.createBoard();
+        scoreDisplay.style.display = "block";
         gameActive = true;
         updateDisplay();
     });
 
     const updateDisplay = () => {
-        if(gameActive && !checkForWin()) {
-            informationDisplay.textContent = currentPlayer.name + " '" + currentPlayer.marker + "' turn!";
+        if (checkForWin()) {
+            currentPlayer.score++; // if round won give score and increment amount of rounds played
+            roundsPlayed++;
+            informationDisplay.textContent = `${currentPlayer.name} wins the round!`;
+
+            if (roundsPlayed < rounds) {
+                // restart board after a round win after 2 seconds
+                setTimeout(() => gameBoard.resetBoard(), 2000);
+            } 
+            
+            else {
+                // Determine winner
+                let winner = player1.score > player2.score ? player1.name : player2.name;
+                informationDisplay.textContent = `${winner} wins the whole game!`;
+                gameActive = false;
+            };
+
         } 
-        
-        else if (gameActive && checkForWin()) {
-            informationDisplay.textContent = currentPlayer.name + " HAS WON!";
-        }
 
         else {
-            informationDisplay.textContent = "Welcome to Tic-Tac-Toe!"
+            informationDisplay.textContent = `${currentPlayer.name} (${currentPlayer.marker})'s turn`;
         }
-    }
+
+        // Score display update
+        scoreDisplay.textContent = `${player1.name}: ${player1.score} / ${rounds} | ${player2.name}: ${player2.score} / ${rounds}`;
+    };
 
     const handlePlayerMove = (index) => {
-        // Check first if square is empty
-        if(board[index] === "") {
-            // if square empty mark it
+        let board = gameBoard.getBoard();
+        if (board[index] === "" && gameActive) {
             gameBoard.markSquare(index, currentPlayer.marker);
-
-            if(checkForWin()) {
-                console.log(currentPlayer.name)
+            if (checkForWin()) {
                 updateDisplay();
-                // alert(currentPlayer.name + " wins!")
-                // gameBoard.resetBoard();
+            } else {
+                switchTurn();
+                updateDisplay();
             }
-            switchTurn();
-            updateDisplay();
         }
     };
 
     const switchTurn = () => {
-        // If currentplayer equals to player 1 then switch, else switch to player1
         currentPlayer = currentPlayer === player1 ? player2 : player1;
     };
 
@@ -141,6 +146,17 @@ const gameState = (function() {
         
     };
 
+    const resetGame = () => {
+        roundsPlayed = 0;
+        gameBoard.resetBoard();
+        if (player1 && player2) {
+            player1.score = 0;
+            player2.score = 0;
+        }
+        gameActive = false;
+    };
+
     return { handlePlayerMove };
 
 })();
+``
