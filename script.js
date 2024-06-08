@@ -44,31 +44,68 @@ const gameBoard = (function() {
 
 function createPlayer(name, marker) {
     return {name, marker};
-}
+};
 
 const gameState = (function() {
 
-    // Initialize players -> Gather names later
-    const player1 = createPlayer("placeholder1", "o");
-    const player2 = createPlayer("placeholder2", "x");
-    let board = gameBoard.getBoard(); // get the board
+    const playerNameForms = document.getElementById("playerNameForm");
+    const informationDisplay = document.getElementById("infoDisplay")
+    const board = gameBoard.getBoard(); // get the board
+    let gameActive = false;
+    let player1, player2, currentPlayer;
 
-    // Initialize boardgameContainer
+
+    playerNameForms.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // gather names
+        const player1NameValue = document.getElementById("firstName").value;
+        const player2NameValue = document.getElementById("secondName").value;
+
+        // assign player names
+        player1 = player1NameValue ? createPlayer(player1NameValue, "O") : createPlayer("Player 1", "O");
+        player2 = player2NameValue ? createPlayer(player2NameValue, "X") : createPlayer("Player 2", "X");
+
+        // assign current player (always first player going to be playing "O")
+        currentPlayer = player1;
+
+        // clear the forms
+        playerNameForms.reset();
+
+        // Start the game
+        gameBoard.createBoard();
+        gameActive = true;
+        updateDisplay();
+    });
+
+    const updateDisplay = () => {
+        if(gameActive && !checkForWin()) {
+            informationDisplay.textContent = currentPlayer.name + " '" + currentPlayer.marker + "' turn!";
+        } 
+        
+        else if (gameActive && checkForWin()) {
+            informationDisplay.textContent = currentPlayer.name + " HAS WON!";
+        }
+
+        else {
+            informationDisplay.textContent = "Welcome to Tic-Tac-Toe!"
+        }
+    }
+
     const handlePlayerMove = (index) => {
-
-
         // Check first if square is empty
         if(board[index] === "") {
+            // if square empty mark it
             gameBoard.markSquare(index, currentPlayer.marker);
 
-            if(!checkForWin()) {
-                switchTurn();
+            if(checkForWin()) {
+                console.log(currentPlayer.name)
+                updateDisplay();
+                // alert(currentPlayer.name + " wins!")
+                // gameBoard.resetBoard();
             }
-
-            else {
-                alert(currentPlayer.name + " wins!")
-                gameBoard.resetBoard();
-            }
+            switchTurn();
+            updateDisplay();
         }
     };
 
@@ -78,23 +115,18 @@ const gameState = (function() {
     };
 
     const checkForWin = () => {
-
         const winningPatterns = [
-            // rows
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            // columns
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            // diagonals
-            [0, 4, 8],
-            [6, 4, 2],
+            // rows - columns - diagonals
+            [0, 1, 2], [0, 3, 6], [0, 4, 8],
+            [3, 4, 5], [1, 4, 7], [6, 4, 2],
+            [6, 7, 8], [2, 5, 8],
         ];
 
         for(let pattern of winningPatterns) {
+
             for(let j = 0; pattern.length; j++) {
+
+                // if marker not found break & try different pattern
                 if(board[pattern[j]] !== currentPlayer.marker) {
                     break;
                 }
@@ -112,6 +144,3 @@ const gameState = (function() {
     return { handlePlayerMove };
 
 })();
-
-
-gameBoard.createBoard(); 

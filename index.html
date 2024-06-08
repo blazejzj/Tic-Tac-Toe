@@ -7,22 +7,27 @@
         <title>Tic-Tac-Toe - blazejzj</title>
     </head>
     <body>
-        <div class="player">
-            <form action="#">
-
-                <label for="firstName">Enter First Playername</label>
-                <input type="text" id="firstName" name="firstName" required minlength="1">
-
-                <label for="secondName">Enter First Playername</label>
-                <input type="text" id="secondName" name="secondName" required minlength="1">
-
-                <button type="submit">Submit Names</button>
-                
-            </form>
+        <div class="container">
+            <div class="player">
+                <form action="#" id="playerNameForm">
+                    <h2 >Enter the names or start the game</h2>
+                    <label for="firstName">Player 1 name: </label>
+                    <input type="text" id="firstName" name="firstName" minlength="1">
+    
+                    <label for="secondName">Player 2 name: </label>
+                    <input type="text" id="secondName" name="secondName" minlength="1">
+    
+                    <button type="submit" id="submitForms">Start game</button>
+                </form>
+            </div>
+            <h1 id="infoDisplay">Welcome to Tic-Tac-Toe!</h1>
+            <div class="board">
+            </div>
         </div>
-        <div class="board">
-
-        </div>
+        <footer>
+            <p>Made by blazejzj</p>
+            <a href="https://github.com/blazejzj"><img src="img/github.svg" alt="github icon"></a>
+        </footer>
         <script src="script.js"></script>
     </body>
 </html>
