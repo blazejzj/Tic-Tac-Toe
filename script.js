@@ -88,7 +88,7 @@ const gameState = (function() {
             else {
                 // Determine winner
                 let winner = player1.score > player2.score ? player1.name : player2.name;
-                informationDisplay.textContent = `${winner} wins the whole game!`;
+                informationDisplay.textContent = `${winner} wins the game! Congratulations!`;
                 gameActive = false;
             };
 
@@ -159,4 +159,3 @@ const gameState = (function() {
     return { handlePlayerMove };
 
 })();
-``

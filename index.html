@@ -8,26 +8,36 @@
 </head>
 <body>
     <div class="container">
-        <div class="player">
-            <form id="playerNameForm">
-                <h2>Enter the names or start the game</h2>
-                <label for="firstName">Player 1 name:</label>
-                <input type="text" id="firstName" name="firstName" minlength="1">
-
-                <label for="secondName">Player 2 name:</label>
-                <input type="text" id="secondName" name="secondName" minlength="1">
-
-                <label for="rounds">Number of rounds:</label>
-                <input type="number" id="rounds" name="rounds" value="1" min="1">
-
-                <button type="submit" id="submitBtn">Start game</button>
-            </form>
+        <div class="left-panel">
+            <div class="player">
+                <form id="playerNameForm">
+                    <h2>Enter the names or start the game</h2>
+                    <div>
+                        <label for="firstName">Player 1 - "O"</label>
+                        <input type="text" id="firstName" name="firstName" minlength="1">
+                    </div>
+                    <div>
+                        <label for="secondName">Player 2 - "X"</label>
+                        <input type="text" id="secondName" name="secondName" minlength="1">
+                    </div>
+                    <div>
+                        <label for="rounds">Number of rounds:</label>
+                        <input type="number" id="rounds" name="rounds" value="1" min="1">
+                    </div>
+                    <button type="submit" id="submitBtn">Start game</button>
+                </form>
+            </div>
         </div>
-        <h1 id="infoDisplay">Welcome to Tic-Tac-Toe!</h1>
-        <div class="scoreboard">
-            <p id="score">Player 1: 0 | Player 2: 0</p>
+    </div>
+    <div class="game">
+        <div>
+            <h1 id="infoDisplay">Welcome to Tic-Tac-Toe!</h1>
+            <div class="scoreboard">
+                <p id="score">Player 1: 0 | Player 2: 0</p>
+            </div>
         </div>
-        <div class="board"></div>    </div>
+        <div class="board"></div>
+    </div>
     <footer>
         <p>Made by blazejzj</p>
         <a href="https://github.com/blazejzj"><img src="img/github.svg" alt="github icon"></a>
