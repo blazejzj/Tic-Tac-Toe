@@ -1,12 +1,17 @@
 const gameBoard = (function() {
-    let gameContainer = document.querySelector(".board");
+    const gameContainer = document.querySelector(".board");
+    const boardContainer = document.querySelector(".boardContainer");
+    const scoreBoardContainer = document.querySelector(".scoreboard");
     let board = Array(9).fill(""); // fill board with empty strings for now
 
     const createBoard = () => {
         gameContainer.innerHTML = '';  // Clear existing squares if any
         for (let i = 0; i < 9; i++) {
             gameContainer.appendChild(createBoardSquare(i));
-        }
+        };
+        // Display the board and the scoreboard after launch
+        boardContainer.style.display = "block";
+        scoreBoardContainer.style.display = "block";
     };
 
     const createBoardSquare = (index) => {
@@ -70,33 +75,47 @@ const gameState = (function() {
         playerNameForms.reset();
         gameBoard.createBoard();
         scoreDisplay.style.display = "block";
+        
         gameActive = true;
         updateDisplay();
     });
 
     const updateDisplay = () => {
         if (checkForWin()) {
+            gameActive = false;
             currentPlayer.score++; // if round won give score and increment amount of rounds played
             roundsPlayed++;
             informationDisplay.textContent = `${currentPlayer.name} wins the round!`;
 
-            if (roundsPlayed < rounds) {
+            // Determine winner
+            let winner;
+
+            if (player1.score === rounds) {
+                winner = player1.name;
+                informationDisplay.textContent = `${winner} wins the game! Congratulations!`;
+            }
+
+            else if (player2.score === rounds) {
+                winner = player2.name;
+                informationDisplay.textContent = `${winner} wins the game! Congratulations!`;
+            }
+
+            else {
                 // restart board after a round win after 2 seconds
                 setTimeout(() => gameBoard.resetBoard(), 2000);
-            } 
-            
-            else {
-                // Determine winner
-                let winner = player1.score > player2.score ? player1.name : player2.name;
-                informationDisplay.textContent = `${winner} wins the game! Congratulations!`;
-                gameActive = false;
+                // Make game playable again after some seconds -> disable possiblity of marking squares after round end
+                setTimeout(() => gameActive = true, 2200);
+                // make "O" always start
+                currentPlayer = player1;
+                // update display after the win
+                setTimeout(() => informationDisplay.textContent = `${currentPlayer.name} (${currentPlayer.marker})'s turn`, 2200);
             };
 
         } 
 
         else {
             informationDisplay.textContent = `${currentPlayer.name} (${currentPlayer.marker})'s turn`;
-        }
+        };
 
         // Score display update
         scoreDisplay.textContent = `${player1.name}: ${player1.score} / ${rounds} | ${player2.name}: ${player2.score} / ${rounds}`;
@@ -128,22 +147,17 @@ const gameState = (function() {
         ];
 
         for(let pattern of winningPatterns) {
-
             for(let j = 0; pattern.length; j++) {
-
                 // if marker not found break & try different pattern
                 if(board[pattern[j]] !== currentPlayer.marker) {
                     break;
                 }
-
                 if(j === pattern.length - 1) {
                     return true;
                 }
             };
         };
-
         return false;
-        
     };
 
     const resetGame = () => {
@@ -153,7 +167,7 @@ const gameState = (function() {
             player1.score = 0;
             player2.score = 0;
         }
-        gameActive = false;
+        gameActive = true;
     };
 
     return { handlePlayerMove };
