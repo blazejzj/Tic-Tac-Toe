@@ -1,6 +1,6 @@
 # Tic-Tac-Toe
 
-## Welcome to Tic-Tac-Toe! This project is a simple, web-based implementation of the classic game, built using HTML, CSS, and JavaScript. The goal is to create an interactive and user-friendly game experience that allows two players to compete and keep track of their scores.
+Welcome to Tic-Tac-Toe! This project is a simple, web-based implementation of the classic game, built using HTML, CSS, and JavaScript. The goal is to create an interactive and user-friendly game experience that allows two players to compete and keep track of their scores.
 
 
 ### Features
